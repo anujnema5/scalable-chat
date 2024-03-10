@@ -10,19 +10,20 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
 };
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocketService = void 0;
+require("dotenv/config");
 const ioredis_1 = require("ioredis");
 const socket_io_1 = require("socket.io");
 const pub = new ioredis_1.Redis({
-    host: 'redis-3d672da1-anujnemacoding-10fa.a.aivencloud.com',
+    host: process.env.HOST,
     port: 23481,
     username: 'default',
-    password: 'AVNS_t1H7MIGKlazFMpf46QR'
+    password: process.env.AIVEN_PASSWORD
 });
 const sub = new ioredis_1.Redis({
-    host: 'redis-3d672da1-anujnemacoding-10fa.a.aivencloud.com',
+    host: process.env.HOST,
     port: 23481,
     username: 'default',
-    password: 'AVNS_t1H7MIGKlazFMpf46QR'
+    password: process.env.AIVEN_PASSWORD
 });
 class SocketService {
     constructor() {
