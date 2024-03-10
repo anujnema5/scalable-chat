@@ -8,6 +8,7 @@ const init = async () => {
     socketService.io.attach(httpServer)
     socketService.initListner();
 
+    
     httpServer.listen(8000, () => {
         console.log("SERVER ESTABLISHED")
     })
