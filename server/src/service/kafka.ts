@@ -6,7 +6,7 @@ import db from "./prisma";
 
 /** KAFKA BROKER */
 const kafka = new Kafka({
-    brokers: ['scalable-chat-anujnemacoding-10fa.a.aivencloud.com:23494'],
+    brokers: [process.env.KAFKA_SERVICE_URI as string],
     clientId: 'scalable-chat',
 
     ssl: {
@@ -15,7 +15,7 @@ const kafka = new Kafka({
 
     sasl: {
         username: 'avnadmin',
-        password: 'AVNS_0dZT6ShEh78xVHS0Ah-',
+        password: process.env.KAFKA_PASSWORD as string,
         mechanism: 'plain'
     },
 })
@@ -54,6 +54,7 @@ export const startMessageConsumer = async () => {
             console.log(`New message recieved ...`)
 
             if (!message.value) return
+
             try {
                 await db.message.create({
                     data: {

@@ -19,14 +19,14 @@ const kafkajs_1 = require("kafkajs");
 const prisma_1 = __importDefault(require("./prisma"));
 /** KAFKA BROKER */
 const kafka = new kafkajs_1.Kafka({
-    brokers: ['scalable-chat-anujnemacoding-10fa.a.aivencloud.com:23494'],
+    brokers: [process.env.KAFKA_SERVICE_URI],
     clientId: 'scalable-chat',
     ssl: {
         ca: [fs_1.default.readFileSync(path_1.default.resolve('src/service/ca.pem'), 'utf-8')]
     },
     sasl: {
         username: 'avnadmin',
-        password: 'AVNS_0dZT6ShEh78xVHS0Ah-',
+        password: process.env.KAFKA_PASSWORD,
         mechanism: 'plain'
     },
 });
