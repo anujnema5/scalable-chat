@@ -8,12 +8,12 @@ var __awaiter = (this && this.__awaiter) || function (thisArg, _arguments, P, ge
         step((generator = generator.apply(thisArg, _arguments || [])).next());
     });
 };
-
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.SocketService = void 0;
 require("dotenv/config");
 const ioredis_1 = require("ioredis");
 const socket_io_1 = require("socket.io");
+const kafka_1 = require("./kafka");
 const pub = new ioredis_1.Redis({
     host: process.env.HOST,
     port: 23481,
@@ -43,15 +43,16 @@ class SocketService {
             console.log("new socket connected ", socket.id);
             socket.on('event:message', (_a) => __awaiter(this, [_a], void 0, function* ({ message }) {
                 // NOW, PUBLISH THE MESSAGE TO THE REDIS
-                console.log(message);
                 yield pub.publish('MESSAGES', JSON.stringify({ message }));
             }));
         });
-        sub.on('message', (channel, message) => {
+        sub.on('message', (channel, message) => __awaiter(this, void 0, void 0, function* () {
             if (channel === 'MESSAGES') {
                 io.emit('message', message);
+                yield (0, kafka_1.produceMessage)(message);
+                console.log("Messages prodcued to kafka broker");
             }
-        });
+        }));
     }
     get io() {
         return this._io;

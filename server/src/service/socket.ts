@@ -1,6 +1,8 @@
 import 'dotenv/config'
 import { Redis } from "ioredis";
 import { Server, Socket } from "socket.io"
+import db from './prisma';
+import {produceMessage} from './kafka'
 
 const pub = new Redis({
     host: process.env.HOST,
@@ -33,20 +35,21 @@ export class SocketService {
 
     public initListner() {
         const io = this.io
-        
-        io.on("connect", (socket: Socket)=> {
+
+        io.on("connect", (socket: Socket) => {
             console.log("new socket connected ", socket.id);
 
-            socket.on('event:message', async({message}: {message: string})=> {
+            socket.on('event:message', async ({ message }: { message: string }) => {
                 // NOW, PUBLISH THE MESSAGE TO THE REDIS
-                console.log(message);
-                await pub.publish('MESSAGES', JSON.stringify({message}))
+                await pub.publish('MESSAGES', JSON.stringify({ message }))
             })
         })
 
-        sub.on('message', (channel, message)=> {
-            if(channel === 'MESSAGES') {
+        sub.on('message', async (channel, message) => {
+            if (channel === 'MESSAGES') {
                 io.emit('message', message)
+                await produceMessage(message);
+                console.log("Messages prodcued to kafka broker")
             }
         })
     }

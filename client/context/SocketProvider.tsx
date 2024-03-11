@@ -30,7 +30,6 @@ const SocketProvider: React.FC<TSocketeProvider> = ({ children }) => {
     }, [socket])
 
     const onMsgRecieved = useCallback((msg: string) => {
-        console.log("I am triggering")
         const { message } = JSON.parse(msg) as { message: string }
         console.log("New Message recieved " + message);
         setMessage((prev) => [...prev, message])

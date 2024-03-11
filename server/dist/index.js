@@ -14,7 +14,9 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
 Object.defineProperty(exports, "__esModule", { value: true });
 const http_1 = __importDefault(require("http"));
 const socket_1 = require("./service/socket");
+const kafka_1 = require("./service/kafka");
 const init = () => __awaiter(void 0, void 0, void 0, function* () {
+    (0, kafka_1.startMessageConsumer)();
     const httpServer = http_1.default.createServer();
     const socketService = new socket_1.SocketService();
     socketService.io.attach(httpServer);
